@@ -14,4 +14,6 @@ public class TaskDTO {
     private LocalDateTime dueDate;
     private Long projectId;
     private String projectName;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -24,7 +24,8 @@ public class TaskService {
     private ProjectRepository projectRepository;
 
     public List<TaskDTO> getTasks() {
-        return taskRepository.findAll().stream()
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -36,7 +37,11 @@ public class TaskService {
         taskDTO.setDescription(task.getDescription());
         taskDTO.setStatus(task.getStatus().name());
         taskDTO.setPriority(task.getPriority().name());
+        taskDTO.setDueDate(task.getDueDate());
         taskDTO.setProjectId(task.getProject().getId());
+        taskDTO.setProjectName(task.getProject().getName());
+        taskDTO.setCreatedAt(task.getCreatedAt());
+        taskDTO.setUpdatedAt(task.getUpdatedAt());
         return taskDTO;
     }
 
