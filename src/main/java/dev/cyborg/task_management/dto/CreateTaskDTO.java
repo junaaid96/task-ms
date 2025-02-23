@@ -14,7 +14,6 @@ public class CreateTaskDTO {
     private String description;
     @NotEmpty(message = "Priority status is required")
     private String priority;
-    @NotNull(message = "Due Date is required")
     private LocalDateTime dueDate;
     @NotNull(message = "Please select project for the task")
     private Long projectId;

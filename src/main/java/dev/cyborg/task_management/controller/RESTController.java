@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("${API_BASE_URL:/api}")
 public class RESTController {
     @Autowired
     TaskService taskService;
+
     @Autowired
     private ProjectService projectService;
 

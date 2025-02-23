@@ -68,6 +68,10 @@ public class Task {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+
+        if (dueDate == null) {
+            dueDate = createdAt.plusDays(7);
+        }
     }
 
     @PreUpdate
