@@ -1,14 +1,13 @@
 package dev.cyborg.task_management.controller;
 
-import dev.cyborg.task_management.dto.ProjectDTO;
-import dev.cyborg.task_management.dto.TaskDTO;
-import dev.cyborg.task_management.model.Project;
+import dev.cyborg.task_management.dto.*;
 import dev.cyborg.task_management.model.Task;
 import dev.cyborg.task_management.service.ProjectService;
 import dev.cyborg.task_management.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,18 +19,45 @@ public class RESTController {
     private ProjectService projectService;
 
     @GetMapping("/load-data")
-    public String loadSampleProjects() {
-        projectService.loadProjectData();
-        return "Data Loaded!";
+    public ResponseEntity<String> loadSampleProjects() {
+        projectService.loadSampleData();
+        return ResponseEntity.ok("Data Loaded!");
     }
 
-    @GetMapping("/all-projects")
-    public List<ProjectDTO> getProjects() {
-        return projectService.getProjects();
+    @GetMapping("/clear-all")
+    public ResponseEntity<String> clearAllData() {
+        projectService.clearAllData();
+        return ResponseEntity.ok("All cleared!");
     }
 
-    @GetMapping("/all-tasks")
-    public List<TaskDTO> getTasks() {
-        return taskService.getTasks();
+    @PostMapping("/create-task")
+    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody CreateTaskDTO createTaskDTO) {
+        Task task = taskService.createTask(createTaskDTO);
+        return ResponseEntity.ok(taskService.convertToDTO(task));
+    }
+
+    @PutMapping("/tasks/{taskId}")
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long taskId, @Valid @RequestBody UpdateTaskDTO updateTaskDTO) {
+        return ResponseEntity.ok(taskService.updateTask(taskId, updateTaskDTO));
+    }
+
+    @PostMapping("/create-project")
+    public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody CreateProjectDTO createProjectDTO) {
+        return ResponseEntity.ok(projectService.createProject(createProjectDTO));
+    }
+
+    @PutMapping("/projects/{projectId}")
+    public ResponseEntity<ProjectDTO> updateProject(@PathVariable Long projectId, @Valid @RequestBody UpdateProjectDTO updateProjectDTO) {
+        return ResponseEntity.ok(projectService.updateProject(projectId, updateProjectDTO));
+    }
+
+    @GetMapping("/projects")
+    public ResponseEntity<List<ProjectDTO>> getProjects() {
+        return ResponseEntity.ok(projectService.getProjects());
+    }
+
+    @GetMapping("/tasks")
+    public ResponseEntity<List<TaskDTO>> getTasks() {
+        return ResponseEntity.ok(taskService.getTasks());
     }
 }

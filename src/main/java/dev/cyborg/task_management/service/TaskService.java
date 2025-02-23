@@ -1,6 +1,8 @@
 package dev.cyborg.task_management.service;
 
+import dev.cyborg.task_management.dto.CreateTaskDTO;
 import dev.cyborg.task_management.dto.TaskDTO;
+import dev.cyborg.task_management.dto.UpdateTaskDTO;
 import dev.cyborg.task_management.enums.TaskPriority;
 import dev.cyborg.task_management.enums.TaskStatus;
 import dev.cyborg.task_management.model.Project;
@@ -10,8 +12,6 @@ import dev.cyborg.task_management.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,7 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    private TaskDTO convertToDTO(Task task) {
+    public TaskDTO convertToDTO(Task task) {
         TaskDTO taskDTO = new TaskDTO();
         taskDTO.setId(task.getId());
         taskDTO.setTitle(task.getTitle());
@@ -45,10 +45,42 @@ public class TaskService {
         return taskDTO;
     }
 
-    public Task createTaskForExistingProject(Long projectId, String title, String description, TaskStatus status, TaskPriority priority) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
-        Task task = new Task(title, description, status, priority);
+    public Task createTask(CreateTaskDTO createTaskDTO) {
+        Project project = projectRepository.findById(createTaskDTO.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        Task task = new Task();
+        task.setTitle(createTaskDTO.getTitle());
+        task.setDescription(createTaskDTO.getDescription());
+        task.setStatus(TaskStatus.TODO); // Default status for new tasks
+        task.setPriority(TaskPriority.valueOf(createTaskDTO.getPriority()));
+        task.setDueDate(createTaskDTO.getDueDate());
         task.setProject(project);
+
         return taskRepository.save(task);
+    }
+
+    public TaskDTO updateTask(Long taskId, UpdateTaskDTO updateTaskDTO) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (updateTaskDTO.getTitle() != null) {
+            task.setTitle(updateTaskDTO.getTitle());
+        }
+        if (updateTaskDTO.getDescription() != null) {
+            task.setDescription(updateTaskDTO.getDescription());
+        }
+        if (updateTaskDTO.getStatus() != null) {
+            task.setStatus(TaskStatus.valueOf(updateTaskDTO.getStatus()));
+        }
+        if (updateTaskDTO.getPriority() != null) {
+            task.setPriority(TaskPriority.valueOf(updateTaskDTO.getPriority()));
+        }
+        if (updateTaskDTO.getDueDate() != null) {
+            task.setDueDate(updateTaskDTO.getDueDate());
+        }
+
+        Task updatedTask = taskRepository.save(task);
+        return convertToDTO(updatedTask);
     }
 }
