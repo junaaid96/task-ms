@@ -18,12 +18,6 @@ public class RESTController {
     @Autowired
     private ProjectService projectService;
 
-    @GetMapping("/load-data")
-    public ResponseEntity<String> loadSampleProjects() {
-        projectService.loadSampleData();
-        return ResponseEntity.ok("Data Loaded!");
-    }
-
     @GetMapping("/clear-all")
     public ResponseEntity<String> clearAllData() {
         projectService.clearAllData();
@@ -49,6 +43,18 @@ public class RESTController {
     @PutMapping("/projects/{projectId}")
     public ResponseEntity<ProjectDTO> updateProject(@PathVariable Long projectId, @Valid @RequestBody UpdateProjectDTO updateProjectDTO) {
         return ResponseEntity.ok(projectService.updateProject(projectId, updateProjectDTO));
+    }
+
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
+        projectService.deleteProject(projectId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/projects")

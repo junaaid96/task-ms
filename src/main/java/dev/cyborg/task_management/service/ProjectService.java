@@ -92,31 +92,10 @@ public class ProjectService {
         return convertToDto(savedProject);
     }
 
-    // load sample data
-    public void loadSampleData() {
-        Project project1 = new Project("Project 1", "Project description 1");
-        Project project2 = new Project("Project 2", "Project description 2");
-
-        Task task1 = new Task("Task 1", "Task description 1", TaskStatus.TODO, TaskPriority.LOW);
-        Task task2 = new Task("Task 2", "Task description 2", TaskStatus.DONE, TaskPriority.URGENT);
-        Task task3 = new Task("Task 3", "Task description 3", TaskStatus.IN_PROGRESS, TaskPriority.MEDIUM);
-        Task task4 = new Task("Task 4", "Task description 4", TaskStatus.REVIEW, TaskPriority.HIGH);
-
-        // Set due dates
-        LocalDateTime dueDate = LocalDateTime.now().plusDays(7);
-        task1.setDueDate(dueDate);
-        task2.setDueDate(dueDate);
-        task3.setDueDate(dueDate);
-        task4.setDueDate(dueDate);
-
-        // Add tasks to projects
-        project1.addTask(task1);
-        project1.addTask(task2);
-        project2.addTask(task3);
-        project2.addTask(task4);
-
-        // Save projects (will cascade save tasks)
-        projectRepository.saveAll(Arrays.asList(project1, project2));
+    public void deleteProject(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        projectRepository.delete(project);
     }
 
     // Clear all data from the database

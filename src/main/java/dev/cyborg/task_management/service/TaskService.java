@@ -83,4 +83,10 @@ public class TaskService {
         Task updatedTask = taskRepository.save(task);
         return convertToDTO(updatedTask);
     }
+
+    public void deleteTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        taskRepository.delete(task);
+    }
 }
