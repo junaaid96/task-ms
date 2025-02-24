@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("${API_BASE_URL:/api}")
 public class RESTController {
     @Autowired
-    TaskService taskService;
+    private TaskService taskService;
 
     @Autowired
     private ProjectService projectService;
