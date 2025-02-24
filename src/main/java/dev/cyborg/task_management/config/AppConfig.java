@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
-    @Value("${API_BASE_URL:/api")
+    @Value("${API_BASE_URL:/api}")
     private String baseUrl;
 
     public String getBaseUrl() {
