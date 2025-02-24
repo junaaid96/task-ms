@@ -24,7 +24,7 @@ public class TaskService {
     private ProjectRepository projectRepository;
 
     public List<TaskDTO> getTasks() {
-        List<Task> tasks = taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAllByOrderByCreatedAtDesc();
         return tasks.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

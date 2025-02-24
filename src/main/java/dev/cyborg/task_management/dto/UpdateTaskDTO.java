@@ -12,10 +12,10 @@ public class UpdateTaskDTO {
     private String title;
     @NotEmpty(message = "Description is required")
     private String description;
+    @NotEmpty(message = "Priority is required")
+    private String priority;
     @NotEmpty(message = "Status is required")
     private String status;
-    @NotEmpty(message = "Priority status is required")
-    private String priority;
     @NotNull(message = "Due date is required")
     private LocalDateTime dueDate;
 }

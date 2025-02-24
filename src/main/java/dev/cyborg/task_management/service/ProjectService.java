@@ -24,7 +24,8 @@ public class ProjectService {
     private TaskRepository taskRepository;
 
     public List<ProjectDTO> getProjects() {
-        return projectRepository.findAll().stream()
+        List<Project> projects = projectRepository.findAllByOrderByCreatedAtDesc();
+        return projects.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -50,8 +51,6 @@ public class ProjectService {
         taskDTO.setDueDate(task.getDueDate());
         taskDTO.setProjectId(task.getProject().getId());
         taskDTO.setProjectName(task.getProject().getName());
-        taskDTO.setCreatedAt(task.getCreatedAt());
-        taskDTO.setUpdatedAt(task.getUpdatedAt());
         return taskDTO;
     }
 

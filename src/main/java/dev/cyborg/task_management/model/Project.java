@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,29 +24,28 @@ public class Project {
     @Column(name = "Name")
     private String name;
 
-    @Column(name = "Description")
+    @Column(name = "Description", length = 1000)
     private String description;
+
+    @Column(name = "Created At")
+    private LocalDateTime createdAt;
+
+    @Column(name = "Updated At")
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Task> tasks = new HashSet<>();
 
-    public Project() {
-        // Required by JPA
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
-    public Project(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-    public void addTask(Task task) {
-        tasks.add(task);
-        task.setProject(this);
-    }
-
-    public void removeTask(Task task) {
-        tasks.remove(task);
-        task.setProject(null);
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
     @Override
